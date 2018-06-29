@@ -21,8 +21,9 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'hdima/python-syntax'
 Plug 'w0rp/ale'
 
-" Plug 'rust-lang/rust.vim'
-" Plug 'cespare/vim-toml'
+Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
+Plug 'cespare/vim-toml'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -35,6 +36,10 @@ Plug 'morhetz/gruvbox'
 Plug 'joshdick/onedark.vim'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'atelierbram/vim-colors_atelier-schemes'
+Plug 'sjl/badwolf'
+Plug 'tomasr/molokai'
+Plug 'crusoexia/vim-monokai'
+Plug 'whatyouhide/vim-gotham'
 
 " Initialize plugin system
 call plug#end()
@@ -187,7 +192,7 @@ set termguicolors
 
 try
     let g:gruvbox_italic=1
-    let g:gruvbox_contrast_dark='soft'
+    let g:gruvbox_contrast_dark='medium'
     colorscheme gruvbox
 catch
 endtry
@@ -556,4 +561,6 @@ let g:ale_fixers = {
 tnoremap df <C-\><C-n>
 
 " let g:rustfmt_autosave = 1
+
+let g:racer_cmd = "/Users/chingachgook/.cargo/bin/racer"
 
