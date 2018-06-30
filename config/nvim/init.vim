@@ -39,7 +39,10 @@ Plug 'atelierbram/vim-colors_atelier-schemes'
 Plug 'sjl/badwolf'
 Plug 'tomasr/molokai'
 Plug 'crusoexia/vim-monokai'
+Plug 'w0ng/vim-hybrid'
 Plug 'whatyouhide/vim-gotham'
+Plug 'romainl/Apprentice'
+Plug 'chriskempson/base16-vim'
 
 " Initialize plugin system
 call plug#end()
@@ -192,7 +195,7 @@ set termguicolors
 
 try
     let g:gruvbox_italic=1
-    let g:gruvbox_contrast_dark='medium'
+    let g:gruvbox_contrast_dark='soft'
     colorscheme gruvbox
 catch
 endtry
@@ -558,9 +561,17 @@ let g:ale_fixers = {
             \   'cpp': ['clang-format'],
             \}
 
-tnoremap df <C-\><C-n>
+tnoremap <Esc> <C-\><C-n>
+tnoremap <C-h> <C-\><C-n><C-w>hi<Esc>
+tnoremap <C-j> <C-\><C-n><C-w>ji<Esc>
+tnoremap <C-k> <C-\><C-n><C-w>ki<Esc>
+tnoremap <C-l> <C-\><C-n><C-w>li<Esc>
 
-" let g:rustfmt_autosave = 1
+
+let g:rustfmt_autosave = 1
 
 let g:racer_cmd = "/Users/chingachgook/.cargo/bin/racer"
+
+" autocmd BufWinEnter,WinEnter term://* startinsert
+au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 
