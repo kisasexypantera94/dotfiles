@@ -4,45 +4,64 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'rdnetto/YCM-Generator'
 Plug 'Valloric/YouCompleteMe'
+Plug 'rhysd/vim-clang-format'
+Plug 'octol/vim-cpp-enhanced-highlight'
+
+Plug 'rust-lang/rust.vim'
+" Plug 'racer-rust/vim-racer'
+Plug 'cespare/vim-toml'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/echodoc.vim'
+Plug 'roxma/nvim-completion-manager'
+
+Plug 'w0rp/ale'
+
+Plug 'SirVer/ultisnips'
+let g:UltiSnipsSnippetDirectories = ['UltiSnips', $HOME.'/.vim/UltiSnips']
+
 Plug 'junegunn/vim-easy-align'
 Plug 'Yggdroot/indentLine'
 Plug 'jiangmiao/auto-pairs'
-Plug 'SirVer/ultisnips'
-Plug 'ervandew/supertab'
+" Plug 'ervandew/supertab'
 Plug 'xolox/vim-misc'
+Plug 'tpope/vim-surround'
+Plug 'yuttie/comfortable-motion.vim'
+
 Plug 'xolox/vim-session'
-let g:UltiSnipsSnippetDirectories = ['UltiSnips', $HOME.'/.vim/UltiSnips']
 
 Plug 'scrooloose/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'ryanoasis/vim-devicons'
 Plug 'hdima/python-syntax'
-Plug 'w0rp/ale'
 
-Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
-Plug 'cespare/vim-toml'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'rhysd/vim-clang-format'
-
-Plug 'yuttie/comfortable-motion.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
 Plug 'nanotech/jellybeans.vim'
 Plug 'morhetz/gruvbox'
 Plug 'joshdick/onedark.vim'
 Plug 'NLKNguyen/papercolor-theme'
-Plug 'atelierbram/vim-colors_atelier-schemes'
 Plug 'sjl/badwolf'
 Plug 'tomasr/molokai'
 Plug 'crusoexia/vim-monokai'
 Plug 'w0ng/vim-hybrid'
-Plug 'whatyouhide/vim-gotham'
-Plug 'romainl/Apprentice'
 Plug 'chriskempson/base16-vim'
+Plug 'yankcrime/direwolf'
+Plug 'broduo/broduo-color-scheme'
+Plug 'amadeus/vim-evokai'
+Plug 'ayu-theme/ayu-vim'
+Plug 'rakr/vim-one'
+Plug 'xolox/vim-colorscheme-switcher'
+Plug 'hzchirs/vim-material'
+Plug 'ajmwagar/vim-deus'
 
 " Initialize plugin system
 call plug#end()
@@ -117,11 +136,6 @@ set wildmenu
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-    set wildignore+=.git\*,.hg\*,.svn\*
-else
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-endif
 
 "Always show current position
 set ruler
@@ -186,17 +200,15 @@ syntax enable
 
 set background=dark
 
-" Enable 256 colors palette in Gnome Terminal
-if $COLORTERM == 'gnome-terminal'
-    set t_Co=256
-endif
-
 set termguicolors
 
 try
     let g:gruvbox_italic=1
-    let g:gruvbox_contrast_dark='soft'
-    colorscheme gruvbox
+    let g:gruvbox_contrast_dark='medium'
+    let g:one_allow_italics = 1
+    let g:material_style='palenight'
+    " colorscheme hybrid
+    " let &syntax = &syntax
 catch
 endtry
 
@@ -208,8 +220,17 @@ if has("gui_running")
     set guitablabel=%M\ %t
 endif
 
+if has('nvim')
+    " set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+    set guicursor=a:blinkwait700-blinkon400-blinkoff250
+    set inccommand=nosplit
+end
+
+" use xterm/iterm's in 256 color mode
+" set t_Co=256
+
 " Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
+set encoding=UTF-8
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
@@ -302,8 +323,8 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers
 try
-    set switchbuf=useopen,usetab,newtab
-    set stal=2
+set switchbuf=useopen,usetab,newtab
+set stal=2
 catch
 endtry
 
@@ -334,23 +355,23 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 if has("mac") || has("macunix")
-    nmap <D-j> <M-j>
-    nmap <D-k> <M-k>
-    vmap <D-j> <M-j>
-    vmap <D-k> <M-k>
+nmap <D-j> <M-j>
+nmap <D-k> <M-k>
+vmap <D-j> <M-j>
+vmap <D-k> <M-k>
 endif
 
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
+let save_cursor = getpos(".")
+let old_query = getreg('/')
+silent! %s/\s\+$//e
+call setpos('.', save_cursor)
+call setreg('/', old_query)
 endfun
 
 if has("autocmd")
-    autocmd BufWritePre *.cpp,*.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+autocmd BufWritePre *.cpp,*.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
 
 
@@ -365,7 +386,6 @@ map <leader>sn ]s
 map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -388,56 +408,56 @@ map <leader>pp :setlocal paste!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Returns true if paste mode is enabled
 function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    endif
-    return ''
+if &paste
+    return 'PASTE MODE  '
+endif
+return ''
 endfunction
 
 " Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()
-    let l:currentBufNum = bufnr("%")
-    let l:alternateBufNum = bufnr("#")
+let l:currentBufNum = bufnr("%")
+let l:alternateBufNum = bufnr("#")
 
-    if buflisted(l:alternateBufNum)
-        buffer #
-    else
-        bnext
-    endif
+if buflisted(l:alternateBufNum)
+    buffer #
+else
+    bnext
+endif
 
-    if bufnr("%") == l:currentBufNum
-        new
-    endif
+if bufnr("%") == l:currentBufNum
+    new
+endif
 
-    if buflisted(l:currentBufNum)
-        execute("bdelete! ".l:currentBufNum)
-    endif
+if buflisted(l:currentBufNum)
+    execute("bdelete! ".l:currentBufNum)
+endif
 endfunction
 
 function! CmdLine(str)
-    call feedkeys(":" . a:str)
+call feedkeys(":" . a:str)
 endfunction
 
 function! VisualSelection(direction, extra_filter) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
+let l:saved_reg = @"
+execute "normal! vgvy"
 
-    let l:pattern = escape(@", "\\/.*'$^~[]")
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
+let l:pattern = escape(@", "\\/.*'$^~[]")
+let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-    if a:direction == 'gv'
-        call CmdLine("Ack '" . l:pattern . "' " )
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    endif
+if a:direction == 'gv'
+    call CmdLine("Ack '" . l:pattern . "' " )
+elseif a:direction == 'replace'
+    call CmdLine("%s" . '/'. l:pattern . '/')
+endif
 
-    let @/ = l:pattern
-    let @" = l:saved_reg
+let @/ = l:pattern
+let @" = l:saved_reg
 endfunction
 
 
-let g:session_autosave = 'no'
+let g:session_autosave = 'yes'
 
 imap df <Esc>
 
@@ -446,34 +466,6 @@ nnoremap <leader>v :tabe ~/.config/nvim/init.vim<CR>:tabm 0<CR>
 
 " Refresh .vimrc
 nnoremap <leader>s :! w<CR>:so $MYVIMRC<CR>
-
-" 
-command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
-let g:ShellBuffer = 'shellbuffer'
-let g:ShellBufferLinesCount = 1
-function! s:RunShellCommand(cmdline)
-    if bufwinnr(g:ShellBuffer) > 0
-        call setbufline(g:ShellBuffer, g:ShellBufferLinesCount, '')
-        let g:ShellBufferLinesCount += 1
-    else
-        silent execute 'split ' . g:ShellBuffer
-        setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-        wincmd p
-    endif
-
-    let l:res = systemlist(a:cmdline)
-
-    call setbufline(g:ShellBuffer, g:ShellBufferLinesCount, '[' . strftime('%c') . '] Command: ' . a:cmdline)
-    call setbufline(g:ShellBuffer, g:ShellBufferLinesCount + 1, l:res)
-
-    let g:ShellBufferLinesCount += len(l:res) + 1
-    1
-endfunction
-
-" Run shell commands silently
-command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
-
-command! -nargs=0 BuildRunCpp17 execute ':AsyncRun clang++ -std=c++17 % -o %:r && ./%:r' | execute ':checktime'
 
 " C++17 Build & Run
 autocmd FileType cpp nnoremap <C-b> :silent !clang++ -std=c++17 cp.cpp -o cp && ./cp<CR>
@@ -500,6 +492,7 @@ let g:ycm_show_diagnostics_ui = 0
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
+" let g:SuperTabCrMapping = 1
 
 let g:ycm_python_binary_path = 'python3'
 let g:ycm_seed_identifiers_with_syntax = 1
@@ -509,8 +502,8 @@ let g:ycm_autoclose_preview_window_after_completion=1
 
 " YCM python3 semantic suggestions
 let g:ycm_semantic_triggers = {
-            \   'python': [ 're!\w{2}' ]
-            \ }
+        \   'python': [ 're!\w{2}' ]
+        \ }
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = "<tab>"
@@ -535,16 +528,10 @@ let python_highlight_all=1
 " Enter normal mode when switching buffers
 " autocmd BufEnter * stopinsert
 
-let g:CodeForcesUsername='kisasexypantera94'
-let g:CodeForcesTemplate='/Users/chingachgook/dr.Gin-Bad-Giver/competitive-programming/ParseContest/contest'
+" let g:CodeForcesUsername='kisasexypantera94'
+" let g:CodeForcesTemplate='/Users/chingachgook/dr.Gin-Bad-Giver/competitive-programming/ParseContest/contest'
 
-set cursorline
-
-" Smooth scrolling
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-" noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-" noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+" set nocursorline
 
 " Paste with auto-indent
 nnoremap p ]p
@@ -556,12 +543,8 @@ nnoremap <leader>dd "_dd
 
 " Airline settings
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 
-let g:ale_fixers = {
-            \   'cpp': ['clang-format'],
-            \}
-
-tnoremap <Esc> <C-\><C-n>
 tnoremap <C-h> <C-\><C-n><C-w>hi<Esc>
 tnoremap <C-j> <C-\><C-n><C-w>ji<Esc>
 tnoremap <C-k> <C-\><C-n><C-w>ki<Esc>
@@ -569,9 +552,25 @@ tnoremap <C-l> <C-\><C-n><C-w>li<Esc>
 
 
 let g:rustfmt_autosave = 1
-
 let g:racer_cmd = "/Users/chingachgook/.cargo/bin/racer"
+let g:racer_experimental_completer = 1
 
-" autocmd BufWinEnter,WinEnter term://* startinsert
+let g:LanguageClient_autoStart = 1
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :vs <bar> call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+
+autocmd FocusGained * silent! checktime
+
+set timeoutlen=1000 ttimeoutlen=0
+
+inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
+inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
 
