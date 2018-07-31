@@ -1,11 +1,15 @@
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 call plug#begin('~/.local/share/nvim/plugged')
+let g:python3_host_prog='/usr/local/bin/python3'
+let g:python_host_prog='/usr/local/bin/python'
 
-Plug 'rdnetto/YCM-Generator'
-Plug 'Valloric/YouCompleteMe'
-Plug 'rhysd/vim-clang-format'
-Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'rdnetto/YCM-Generator' , 
+Plug 'Valloric/YouCompleteMe', 
+Plug 'rhysd/vim-clang-format', 
+Plug 'octol/vim-cpp-enhanced-highlight', 
+
+" Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
 
 Plug 'rust-lang/rust.vim'
 " Plug 'racer-rust/vim-racer'
@@ -16,8 +20,18 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/echodoc.vim'
-Plug 'roxma/nvim-completion-manager'
+" Plug 'Shougo/echodoc.vim'
+" Plug 'roxma/nvim-completion-manager'
+" Plug 'ncm2/ncm2'
+" " ncm2 requires nvim-yarp
+" Plug 'roxma/nvim-yarp'
+" " Plug 'ncm2/ncm2-racer'
+
+" " enable ncm2 for all buffer
+" autocmd BufEnter * call ncm2#enable_for_buffer()
+
+" " note that must keep noinsert in completeopt, the others is optional
+" set completeopt=noinsert,menuone,noselect
 
 Plug 'w0rp/ale'
 
@@ -27,7 +41,7 @@ let g:UltiSnipsSnippetDirectories = ['UltiSnips', $HOME.'/.vim/UltiSnips']
 Plug 'junegunn/vim-easy-align'
 Plug 'Yggdroot/indentLine'
 Plug 'jiangmiao/auto-pairs'
-" Plug 'ervandew/supertab'
+Plug 'ervandew/supertab'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-surround'
 Plug 'yuttie/comfortable-motion.vim'
@@ -38,7 +52,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
-Plug 'hdima/python-syntax'
+Plug 'vim-python/python-syntax'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -48,19 +62,12 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'nanotech/jellybeans.vim'
 Plug 'morhetz/gruvbox'
 Plug 'joshdick/onedark.vim'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'sjl/badwolf'
-Plug 'tomasr/molokai'
 Plug 'crusoexia/vim-monokai'
 Plug 'w0ng/vim-hybrid'
 Plug 'chriskempson/base16-vim'
-Plug 'yankcrime/direwolf'
-Plug 'broduo/broduo-color-scheme'
-Plug 'amadeus/vim-evokai'
-Plug 'ayu-theme/ayu-vim'
-Plug 'rakr/vim-one'
-Plug 'xolox/vim-colorscheme-switcher'
-Plug 'hzchirs/vim-material'
+" Plug 'ayu-theme/ayu-vim'
+" Plug 'xolox/vim-colorscheme-switcher'
+" Plug 'hzchirs/vim-material'
 Plug 'ajmwagar/vim-deus'
 
 " Initialize plugin system
@@ -99,7 +106,7 @@ call plug#end()
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
-set history=500
+" set history=500
 
 " Enable filetype plugins
 filetype plugin on
@@ -116,7 +123,6 @@ set autowrite
 " like <leader>w saves the current file
 let mapleader = ","
 
-" Fast saving
 nmap <leader>w :w!<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -124,12 +130,6 @@ nmap <leader>w :w!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
-
-" Avoid garbled characters in Chinese language windows OS
-let $LANG='en'
-set langmenu=en
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
 
 " Turn on the Wild menu
 set wildmenu
@@ -182,12 +182,6 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
-endif
-
-
 " Add a bit extra margin to the left
 set foldcolumn=1
 
@@ -204,10 +198,10 @@ set termguicolors
 
 try
     let g:gruvbox_italic=1
-    let g:gruvbox_contrast_dark='medium'
+    let g:gruvbox_contrast_dark='soft'
     let g:one_allow_italics = 1
     let g:material_style='palenight'
-    " colorscheme hybrid
+    colorscheme gruvbox
     " let &syntax = &syntax
 catch
 endtry
@@ -279,10 +273,6 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
-map <c-space> ?
-
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
 
@@ -294,12 +284,6 @@ map <C-l> <C-W>l
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>:tabclose<cr>gT
-
-" Close all the buffers
-map <leader>ba :bufdo bd<cr>
-
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -348,17 +332,11 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ 
 " Remap VIM 0 to first non-blank character
 map 0 ^
 
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
 if has("mac") || has("macunix")
-nmap <D-j> <M-j>
-nmap <D-k> <M-k>
-vmap <D-j> <M-j>
-vmap <D-k> <M-k>
+    nmap <D-j> <M-j>
+    nmap <D-k> <M-k>
+    vmap <D-j> <M-j>
+    vmap <D-k> <M-k>
 endif
 
 " Delete trailing white space on save, useful for some filetypes ;)
@@ -373,34 +351,6 @@ endfun
 if has("autocmd")
 autocmd BufWritePre *.cpp,*.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Spell checking
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Pressing ,ss will toggle and untoggle spell checking
-map <leader>ss :setlocal spell!<cr>
-
-" Shortcuts using <leader>
-map <leader>sn ]s
-map <leader>sp [s
-map <leader>sa zg
-map <leader>s? z=
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Misc
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remove the Windows ^M - when the encodings gets messed up
-noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
-
-" Quickly open a buffer for scribble
-map <leader>q :e ~/buffer<cr>
-
-" Quickly open a markdown buffer for scribble
-map <leader>x :e ~/buffer.md<cr>
-
-" Toggle paste mode on and off
-map <leader>pp :setlocal paste!<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -459,7 +409,7 @@ endfunction
 
 let g:session_autosave = 'yes'
 
-imap df <Esc>
+inoremap df <Esc>
 
 " Open .vimrc
 nnoremap <leader>v :tabe ~/.config/nvim/init.vim<CR>:tabm 0<CR>
@@ -468,7 +418,7 @@ nnoremap <leader>v :tabe ~/.config/nvim/init.vim<CR>:tabm 0<CR>
 nnoremap <leader>s :! w<CR>:so $MYVIMRC<CR>
 
 " C++17 Build & Run
-autocmd FileType cpp nnoremap <C-b> :silent !clang++ -std=c++17 cp.cpp -o cp && ./cp<CR>
+autocmd FileType cpp nnoremap <C-b> :silent !clang++ -std=c++17 % -o %:r && ./%:r<CR>
 
 " Python3 Run
 autocmd FileType python nnoremap <C-b> :silent !python3 %<CR>
@@ -494,16 +444,16 @@ let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
 " let g:SuperTabCrMapping = 1
 
-let g:ycm_python_binary_path = 'python3'
+" let g:ycm_python_binary_path = 'python3'
 let g:ycm_seed_identifiers_with_syntax = 1
 
 " close autocomplete window when done
 let g:ycm_autoclose_preview_window_after_completion=1
 
 " YCM python3 semantic suggestions
-let g:ycm_semantic_triggers = {
-        \   'python': [ 're!\w{2}' ]
-        \ }
+" let g:ycm_semantic_triggers = {
+        " \   'python': [ 're!\w{2}' ]
+        " \ }
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = "<tab>"
@@ -523,23 +473,10 @@ set ttyfast
 
 let python_highlight_all=1
 
-" set clipboard=unnamed
-
-" Enter normal mode when switching buffers
-" autocmd BufEnter * stopinsert
-
-" let g:CodeForcesUsername='kisasexypantera94'
-" let g:CodeForcesTemplate='/Users/chingachgook/dr.Gin-Bad-Giver/competitive-programming/ParseContest/contest'
-
-" set nocursorline
-
 " Paste with auto-indent
 nnoremap p ]p
 
 nnoremap <leader>dd "_dd
-
-" show relative line numbers
-" set relativenumber 
 
 " Airline settings
 let g:airline#extensions#tabline#enabled = 1
@@ -559,6 +496,7 @@ let g:LanguageClient_autoStart = 1
 
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+        \ 'python': ['pyls'],
     \ }
 
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
@@ -568,9 +506,11 @@ nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 
 autocmd FocusGained * silent! checktime
+autocmd BufEnter *.py ALEDisable
 
-set timeoutlen=1000 ttimeoutlen=0
+set timeoutlen=400 ttimeoutlen=0
 
-inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
-inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
+" inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
+" inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
 
+let g:clang_format#auto_format=1
