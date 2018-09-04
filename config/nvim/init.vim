@@ -53,6 +53,13 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-python/python-syntax'
+Plug 'neovim/python-client'
+" Python autocompletion
+Plug 'zchee/deoplete-jedi', { 'do': ':UpdateRemotePlugins' }
+" Just to add the python go-to-definition and similar features, autocompletion
+" from this plugin is disabled
+Plug 'davidhalter/jedi-vim'
+Plug 'fisadev/vim-isort'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -66,7 +73,7 @@ Plug 'crusoexia/vim-monokai'
 Plug 'w0ng/vim-hybrid'
 Plug 'chriskempson/base16-vim'
 " Plug 'ayu-theme/ayu-vim'
-" Plug 'xolox/vim-colorscheme-switcher'
+Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'hzchirs/vim-material'
 Plug 'ajmwagar/vim-deus'
 
@@ -201,7 +208,8 @@ try
     let g:gruvbox_contrast_dark='soft'
     let g:one_allow_italics = 1
     let g:material_style='palenight'
-    colorscheme gruvbox
+    colorscheme base16-gruvbox-dark-pale
+    " hi Normal guibg=NONE ctermbg=NONE
     " let &syntax = &syntax
 catch
 endtry
@@ -436,7 +444,7 @@ nnoremap <C-p> :NERDTreeToggle<CR>
 " Select all
 nnoremap <C-a> <esc>ggVG<CR>
 
-let g:ycm_show_diagnostics_ui = 0
+let g:ycm_show_diagnostics_ui = 1
 
 " make YCM compatible with UltiSnips (using supertab)
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
@@ -496,7 +504,6 @@ let g:LanguageClient_autoStart = 1
 
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-        \ 'python': ['pyls'],
     \ }
 
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
@@ -514,3 +521,31 @@ set timeoutlen=400 ttimeoutlen=0
 " inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
 
 let g:clang_format#auto_format=1
+
+
+" " Deoplete -----------------------------
+
+" " Use deoplete.
+
+" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_ignore_case = 1
+" let g:deoplete#enable_smart_case = 1
+" " complete with words from any opened file
+" let g:context_filetype#same_filetypes = {}
+" let g:context_filetype#same_filetypes._ = '_'
+
+" Jedi-vim ------------------------------
+
+" Disable autocompletion (using deoplete instead)
+let g:jedi#completions_enabled = 1
+
+" All these mappings work only for python code:
+" Go to definition
+let g:jedi#goto_command = ',d'
+" Find ocurrences
+let g:jedi#usages_command = ',o'
+" Find assignments
+let g:jedi#goto_assignments_command = ',a'
+" Go to definition in new tab
+nmap ,D :tab split<CR>:call jedi#goto()<CR>
+
