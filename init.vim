@@ -1,13 +1,15 @@
-" Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 call plug#begin('~/.local/share/nvim/plugged')
 let g:python3_host_prog='/usr/local/bin/python3'
 let g:python_host_prog='/usr/local/bin/python'
 
+Plug 'tpope/vim-fugitive'
 Plug 'rdnetto/YCM-Generator' , 
 Plug 'Valloric/YouCompleteMe', 
 Plug 'rhysd/vim-clang-format', 
 Plug 'octol/vim-cpp-enhanced-highlight', 
+
+Plug 'Chiel92/vim-autoformat'
 
 " Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
 
@@ -204,12 +206,13 @@ set background=dark
 set termguicolors
 
 try
-    let g:gruvbox_italic=1
-    let g:gruvbox_contrast_dark='soft'
-    let g:one_allow_italics = 1
-    let g:material_style='palenight'
-    colorscheme base16-gruvbox-dark-pale
-    " hi Normal guibg=NONE ctermbg=NONE
+    if !exists('$TMUX') 
+        colorscheme base16-atelier-dune
+        let g:gruvbox_italic=1
+        let g:gruvbox_contrast_dark='soft'
+        let g:one_allow_italics = 1
+        let g:material_style='palenight'
+    endif
     " let &syntax = &syntax
 catch
 endtry
@@ -513,7 +516,7 @@ nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 
 autocmd FocusGained * silent! checktime
-autocmd BufEnter *.py ALEDisable
+" autocmd BufEnter *.py ALEDisable
 
 set timeoutlen=400 ttimeoutlen=0
 
@@ -549,3 +552,4 @@ let g:jedi#goto_assignments_command = ',a'
 " Go to definition in new tab
 nmap ,D :tab split<CR>:call jedi#goto()<CR>
 
+au BufWrite *.py :Autoformat
