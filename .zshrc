@@ -170,3 +170,5 @@ export ACCESS_TOKEN_SECRET='...'
 # You can change these defaults like this.
 export TTC_POMODORO=25
 export TTC_BREAK=10
+
+alias lc='colorls'
