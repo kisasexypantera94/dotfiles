@@ -94,6 +94,7 @@ source $ZSH/oh-my-zsh.sh
 export PATH=$PATH:/usr/local/go/bin
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
+export PATH=/usr/local/bin:$PATH
 
 # Change iterm2 profile. Usage it2prof ProfileName (case sensitive)
 it2prof() { echo -e "\033]50;SetProfile=$1\a" }
@@ -172,3 +173,12 @@ export TTC_POMODORO=25
 export TTC_BREAK=10
 
 alias lc='colorls'
+
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+
+adddate() {
+    while IFS= read -r line; do
+        echo "$(date) $line"
+    done
+}
