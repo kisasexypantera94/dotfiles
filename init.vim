@@ -3,7 +3,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 let g:python3_host_prog='/usr/local/bin/python3'
 let g:python_host_prog='/usr/local/bin/python'
 
-Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-fugitive'
 Plug 'rdnetto/YCM-Generator' , 
 Plug 'Valloric/YouCompleteMe', 
 Plug 'rhysd/vim-clang-format', 
@@ -13,15 +13,17 @@ Plug 'Chiel92/vim-autoformat'
 
 " Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
 
-Plug 'rust-lang/rust.vim'
+" Plug 'rust-lang/rust.vim'
 " Plug 'racer-rust/vim-racer'
-Plug 'cespare/vim-toml'
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" Plug 'cespare/vim-toml'
+" Plug 'autozimu/LanguageClient-neovim', {
+    " \ 'branch': 'next',
+    " \ 'do': 'bash install.sh',
+    " \ }
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 " Plug 'Shougo/echodoc.vim'
 " Plug 'roxma/nvim-completion-manager'
 " Plug 'ncm2/ncm2'
@@ -48,19 +50,19 @@ Plug 'xolox/vim-misc'
 Plug 'tpope/vim-surround'
 Plug 'yuttie/comfortable-motion.vim'
 
-Plug 'xolox/vim-session'
+" Plug 'xolox/vim-session'
 
 Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
-Plug 'vim-python/python-syntax'
-Plug 'neovim/python-client'
+" Plug 'vim-python/python-syntax'
+" Plug 'neovim/python-client'
 " Python autocompletion
-Plug 'zchee/deoplete-jedi', { 'do': ':UpdateRemotePlugins' }
+" Plug 'zchee/deoplete-jedi', { 'do': ':UpdateRemotePlugins' }
 " Just to add the python go-to-definition and similar features, autocompletion
 " from this plugin is disabled
-Plug 'davidhalter/jedi-vim'
+" Plug 'davidhalter/jedi-vim'
 Plug 'fisadev/vim-isort'
 
 Plug 'vim-airline/vim-airline'
@@ -68,55 +70,11 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'christoomey/vim-tmux-navigator'
 
-Plug 'nanotech/jellybeans.vim'
-Plug 'morhetz/gruvbox'
-Plug 'joshdick/onedark.vim'
-Plug 'crusoexia/vim-monokai'
-Plug 'w0ng/vim-hybrid'
 Plug 'chriskempson/base16-vim'
-" Plug 'ayu-theme/ayu-vim'
-Plug 'xolox/vim-colorscheme-switcher'
-" Plug 'hzchirs/vim-material'
-Plug 'ajmwagar/vim-deus'
 
 " Initialize plugin system
 call plug#end()
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Maintainer:
-"       Amir Salihefendic — @amix3k
 "
-" Awesome_version:
-"       Get this config, nice color schemes and lots of plugins!
-"
-"       Install the awesome version from:
-"
-"           https://github.com/amix/vimrc
-"
-" Sections:
-"    -> General
-"    -> VIM user interface
-"    -> Colors and Fonts
-"    -> Files and backups
-"    -> Text, tab and indent related
-"    -> Visual mode related
-"    -> Moving around, tabs and buffers
-"    -> Status line
-"    -> Editing mappings
-"    -> vimgrep searching and cope displaying
-"    -> Spell checking
-"    -> Misc
-"    -> Helper functions
-"
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Sets how many lines of history VIM has to remember
-" set history=500
-
 " Enable filetype plugins
 filetype plugin on
 filetype indent on
@@ -206,12 +164,13 @@ set background=dark
 set termguicolors
 
 try
+    colorscheme base16-gruvbox-dark-medium
+    " colorscheme jellybeans
     if !exists('$TMUX') 
-        colorscheme base16-atelier-dune
+        colorscheme base16-pico
+        hi Normal guibg=NONE ctermbg=NONE
+        " colorscheme base16-atelier-dune
         let g:gruvbox_italic=1
-        let g:gruvbox_contrast_dark='soft'
-        let g:one_allow_italics = 1
-        let g:material_style='palenight'
     endif
     " let &syntax = &syntax
 catch
@@ -219,6 +178,7 @@ endtry
 
 " Set extra options when running in GUI mode
 if has("gui_running")
+    colorscheme base16-gruvbox-dark-medium
     set guioptions-=T
     set guioptions-=e
     set t_Co=256
@@ -230,9 +190,6 @@ if has('nvim')
     set guicursor=a:blinkwait700-blinkon400-blinkoff250
     set inccommand=nosplit
 end
-
-" use xterm/iterm's in 256 color mode
-" set t_Co=256
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=UTF-8
@@ -301,7 +258,7 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+map <leader>t<leader> :tabnext<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -429,7 +386,7 @@ nnoremap <leader>v :tabe ~/.config/nvim/init.vim<CR>:tabm 0<CR>
 nnoremap <leader>s :! w<CR>:so $MYVIMRC<CR>
 
 " C++17 Build & Run
-autocmd FileType cpp nnoremap <C-b> :silent !clang++ -std=c++17 % -o %:r && ./%:r<CR>
+autocmd FileType cpp nnoremap <C-b> :silent !g++ -std=c++17 -Ofast -DCOMP_PROG % -o %:r && ./%:r<CR>
 
 " Python3 Run
 autocmd FileType python nnoremap <C-b> :silent !python3 %<CR>
@@ -498,21 +455,6 @@ tnoremap <C-j> <C-\><C-n><C-w>ji<Esc>
 tnoremap <C-k> <C-\><C-n><C-w>ki<Esc>
 tnoremap <C-l> <C-\><C-n><C-w>li<Esc>
 
-
-let g:rustfmt_autosave = 1
-let g:racer_cmd = "/Users/chingachgook/.cargo/bin/racer"
-let g:racer_experimental_completer = 1
-
-let g:LanguageClient_autoStart = 1
-
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-    \ }
-
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :vs <bar> call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 
 autocmd FocusGained * silent! checktime
@@ -520,36 +462,20 @@ autocmd FocusGained * silent! checktime
 
 set timeoutlen=400 ttimeoutlen=0
 
-" inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
-" inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
-
-let g:clang_format#auto_format=1
-
-
-" " Deoplete -----------------------------
-
-" " Use deoplete.
-
-" let g:deoplete#enable_at_startup = 1
-" let g:deoplete#enable_ignore_case = 1
-" let g:deoplete#enable_smart_case = 1
-" " complete with words from any opened file
-" let g:context_filetype#same_filetypes = {}
-" let g:context_filetype#same_filetypes._ = '_'
-
-" Jedi-vim ------------------------------
-
-" Disable autocompletion (using deoplete instead)
-let g:jedi#completions_enabled = 1
-
-" All these mappings work only for python code:
-" Go to definition
-let g:jedi#goto_command = ',d'
-" Find ocurrences
-let g:jedi#usages_command = ',o'
-" Find assignments
-let g:jedi#goto_assignments_command = ',a'
-" Go to definition in new tab
-nmap ,D :tab split<CR>:call jedi#goto()<CR>
-
 au BufWrite *.py :Autoformat
+
+nnoremap fzf :FZF<CR>
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
