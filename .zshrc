@@ -182,3 +182,10 @@ adddate() {
         echo "$(date) $line"
     done
 }
+
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+export PROJECT_HOME=$HOME/dr.Gin-Bad-Giver
+source /usr/local/bin/virtualenvwrapper.sh
+
+# export PATH="$(brew --prefix sqlite)/bin:$PATH"
