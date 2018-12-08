@@ -4,38 +4,17 @@ let g:python3_host_prog='/usr/local/bin/python3'
 let g:python_host_prog='/usr/local/bin/python'
 
 " Plug 'tpope/vim-fugitive'
-Plug 'rdnetto/YCM-Generator' , 
-Plug 'Valloric/YouCompleteMe', 
-Plug 'rhysd/vim-clang-format', 
-Plug 'octol/vim-cpp-enhanced-highlight', 
+Plug 'rdnetto/YCM-Generator' ,
+Plug 'Valloric/YouCompleteMe',
+Plug 'rhysd/vim-clang-format',
+Plug 'octol/vim-cpp-enhanced-highlight',
 
 Plug 'Chiel92/vim-autoformat'
 
-" Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
-" Plug 'rust-lang/rust.vim'
-" Plug 'racer-rust/vim-racer'
-" Plug 'cespare/vim-toml'
-" Plug 'autozimu/LanguageClient-neovim', {
-    " \ 'branch': 'next',
-    " \ 'do': 'bash install.sh',
-    " \ }
-
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-" Plug 'Shougo/echodoc.vim'
-" Plug 'roxma/nvim-completion-manager'
-" Plug 'ncm2/ncm2'
-" " ncm2 requires nvim-yarp
-" Plug 'roxma/nvim-yarp'
-" " Plug 'ncm2/ncm2-racer'
-
-" " enable ncm2 for all buffer
-" autocmd BufEnter * call ncm2#enable_for_buffer()
-
-" " note that must keep noinsert in completeopt, the others is optional
-" set completeopt=noinsert,menuone,noselect
 
 Plug 'w0rp/ale'
 
@@ -48,21 +27,13 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'ervandew/supertab'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-surround'
-Plug 'yuttie/comfortable-motion.vim'
+" Plug 'yuttie/comfortable-motion.vim'
 
-" Plug 'xolox/vim-session'
 
 Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
-" Plug 'vim-python/python-syntax'
-" Plug 'neovim/python-client'
-" Python autocompletion
-" Plug 'zchee/deoplete-jedi', { 'do': ':UpdateRemotePlugins' }
-" Just to add the python go-to-definition and similar features, autocompletion
-" from this plugin is disabled
-" Plug 'davidhalter/jedi-vim'
 Plug 'fisadev/vim-isort'
 
 Plug 'vim-airline/vim-airline'
@@ -83,14 +54,16 @@ set autoindent
 
 " Set to auto read when a file is changed from the outside
 set autoread
-" Set to auto write 
+" Set to auto write
 set autowrite
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 let mapleader = ","
 
+inoremap df <Esc>
 nmap <leader>w :w!<cr>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -165,14 +138,13 @@ set termguicolors
 
 try
     colorscheme base16-gruvbox-dark-medium
-    " colorscheme jellybeans
-    if !exists('$TMUX') 
+    " colorscheme base16-pico
+    hi Normal guibg=NONE ctermbg=NONE
+    if !exists('$TMUX')
         colorscheme base16-pico
-        hi Normal guibg=NONE ctermbg=NONE
         " colorscheme base16-atelier-dune
         let g:gruvbox_italic=1
     endif
-    " let &syntax = &syntax
 catch
 endtry
 
@@ -275,8 +247,8 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers
 try
-set switchbuf=useopen,usetab,newtab
-set stal=2
+    set switchbuf=useopen,usetab,newtab
+    set stal=2
 catch
 endtry
 
@@ -309,15 +281,15 @@ endif
 
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
-let save_cursor = getpos(".")
-let old_query = getreg('/')
-silent! %s/\s\+$//e
-call setpos('.', save_cursor)
-call setreg('/', old_query)
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
 endfun
 
 if has("autocmd")
-autocmd BufWritePre *.cpp,*.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+    autocmd BufWritePre *.cpp,*.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
 
 
@@ -326,58 +298,53 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Returns true if paste mode is enabled
 function! HasPaste()
-if &paste
-    return 'PASTE MODE  '
-endif
-return ''
+    if &paste
+        return 'PASTE MODE  '
+    endif
+    return ''
 endfunction
 
 " Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()
-let l:currentBufNum = bufnr("%")
-let l:alternateBufNum = bufnr("#")
+    let l:currentBufNum = bufnr("%")
+    let l:alternateBufNum = bufnr("#")
 
-if buflisted(l:alternateBufNum)
-    buffer #
-else
-    bnext
-endif
+    if buflisted(l:alternateBufNum)
+        buffer #
+    else
+        bnext
+    endif
 
-if bufnr("%") == l:currentBufNum
-    new
-endif
+    if bufnr("%") == l:currentBufNum
+        new
+    endif
 
-if buflisted(l:currentBufNum)
-    execute("bdelete! ".l:currentBufNum)
-endif
+    if buflisted(l:currentBufNum)
+        execute("bdelete! ".l:currentBufNum)
+    endif
 endfunction
 
 function! CmdLine(str)
-call feedkeys(":" . a:str)
+    call feedkeys(":" . a:str)
 endfunction
 
 function! VisualSelection(direction, extra_filter) range
-let l:saved_reg = @"
-execute "normal! vgvy"
+    let l:saved_reg = @"
+    execute "normal! vgvy"
 
-let l:pattern = escape(@", "\\/.*'$^~[]")
-let l:pattern = substitute(l:pattern, "\n$", "", "")
+    let l:pattern = escape(@", "\\/.*'$^~[]")
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-if a:direction == 'gv'
-    call CmdLine("Ack '" . l:pattern . "' " )
-elseif a:direction == 'replace'
-    call CmdLine("%s" . '/'. l:pattern . '/')
-endif
+    if a:direction == 'gv'
+        call CmdLine("Ack '" . l:pattern . "' " )
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    endif
 
-let @/ = l:pattern
-let @" = l:saved_reg
+    let @/ = l:pattern
+    let @" = l:saved_reg
 endfunction
-
-
-let g:session_autosave = 'yes'
-
-inoremap df <Esc>
 
 " Open .vimrc
 nnoremap <leader>v :tabe ~/.config/nvim/init.vim<CR>:tabm 0<CR>
@@ -387,6 +354,9 @@ nnoremap <leader>s :! w<CR>:so $MYVIMRC<CR>
 
 " C++17 Build & Run
 autocmd FileType cpp nnoremap <C-b> :silent !g++ -std=c++17 -Ofast -DCOMP_PROG % -o %:r && ./%:r<CR>
+"
+" Golang Build & Run
+autocmd FileType go nnoremap <C-b> :GoRun<CR>
 
 " Python3 Run
 autocmd FileType python nnoremap <C-b> :silent !python3 %<CR>
@@ -404,6 +374,10 @@ nnoremap <C-p> :NERDTreeToggle<CR>
 " Select all
 nnoremap <C-a> <esc>ggVG<CR>
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Plugins and misc
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_show_diagnostics_ui = 1
 
 " make YCM compatible with UltiSnips (using supertab)
@@ -418,10 +392,6 @@ let g:ycm_seed_identifiers_with_syntax = 1
 " close autocomplete window when done
 let g:ycm_autoclose_preview_window_after_completion=1
 
-" YCM python3 semantic suggestions
-" let g:ycm_semantic_triggers = {
-        " \   'python': [ 're!\w{2}' ]
-        " \ }
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = "<tab>"
@@ -465,17 +435,18 @@ set timeoutlen=400 ttimeoutlen=0
 au BufWrite *.py :Autoformat
 
 nnoremap fzf :FZF<CR>
+
 let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
+            \ { 'fg':      ['fg', 'Normal'],
+            \ 'bg':      ['bg', 'Normal'],
+            \ 'hl':      ['fg', 'Comment'],
+            \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+            \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+            \ 'hl+':     ['fg', 'Statement'],
+            \ 'info':    ['fg', 'PreProc'],
+            \ 'border':  ['fg', 'Ignore'],
+            \ 'prompt':  ['fg', 'Conditional'],
+            \ 'pointer': ['fg', 'Exception'],
+            \ 'marker':  ['fg', 'Keyword'],
+            \ 'spinner': ['fg', 'Label'],
+            \ 'header':  ['fg', 'Comment'] }
