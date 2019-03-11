@@ -3,32 +3,31 @@ call plug#begin('~/.local/share/nvim/plugged')
 let g:python3_host_prog='/usr/local/bin/python3'
 let g:python_host_prog='/usr/local/bin/python'
 
-" Plug 'tpope/vim-fugitive'
-Plug 'rdnetto/YCM-Generator' ,
-Plug 'Valloric/YouCompleteMe',
-Plug 'rhysd/vim-clang-format',
-Plug 'octol/vim-cpp-enhanced-highlight',
+Plug 'tpope/vim-fugitive'
+Plug 'rhysd/vim-clang-format'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'rdnetto/YCM-Generator'
+Plug 'Valloric/YouCompleteMe'
+Plug 'fatih/vim-go'
+
+Plug 'elixir-editors/vim-elixir'
 
 Plug 'Chiel92/vim-autoformat'
 
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Plug 'junegunn/fzf.vim'
 
 Plug 'w0rp/ale'
 
 Plug 'SirVer/ultisnips'
 let g:UltiSnipsSnippetDirectories = ['UltiSnips', $HOME.'/.vim/UltiSnips']
 
-Plug 'junegunn/vim-easy-align'
 Plug 'Yggdroot/indentLine'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ervandew/supertab'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-surround'
-" Plug 'yuttie/comfortable-motion.vim'
-
+Plug 'yuttie/comfortable-motion.vim'
 
 Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -42,7 +41,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'christoomey/vim-tmux-navigator'
 
 Plug 'chriskempson/base16-vim'
-
+Plug 'nanotech/jellybeans.vim'
 " Initialize plugin system
 call plug#end()
 "
@@ -137,12 +136,9 @@ set background=dark
 set termguicolors
 
 try
-    colorscheme base16-gruvbox-dark-medium
-    " colorscheme base16-pico
+    colorscheme base16-atelier-dune
     hi Normal guibg=NONE ctermbg=NONE
     if !exists('$TMUX')
-        colorscheme base16-pico
-        " colorscheme base16-atelier-dune
         let g:gruvbox_italic=1
     endif
 catch
@@ -272,13 +268,6 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ 
 " Remap VIM 0 to first non-blank character
 map 0 ^
 
-if has("mac") || has("macunix")
-    nmap <D-j> <M-j>
-    nmap <D-k> <M-k>
-    vmap <D-j> <M-j>
-    vmap <D-k> <M-k>
-endif
-
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
     let save_cursor = getpos(".")
@@ -289,7 +278,7 @@ fun! CleanExtraSpaces()
 endfun
 
 if has("autocmd")
-    autocmd BufWritePre *.cpp,*.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+    autocmd BufWritePre *.c,*.cpp,*.go,*.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
 
 
@@ -391,6 +380,9 @@ let g:ycm_seed_identifiers_with_syntax = 1
 
 " close autocomplete window when done
 let g:ycm_autoclose_preview_window_after_completion=1
+
+nnoremap <silent> gd :YcmCompleter GoTo<CR>
+
 
 
 " better key bindings for UltiSnipsExpandTrigger
