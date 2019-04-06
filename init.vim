@@ -1,50 +1,85 @@
-" - For Neovim: ~/.local/share/nvim/plugged
-call plug#begin('~/.local/share/nvim/plugged')
-let g:python3_host_prog='/usr/local/bin/python3'
-let g:python_host_prog='/usr/local/bin/python'
+" =============================================================================
+" # => Plugins
+" =============================================================================
+set nocompatible
+filetype off
+call plug#begin()
 
-Plug 'tpope/vim-fugitive'
-Plug 'rhysd/vim-clang-format'
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'rdnetto/YCM-Generator'
-Plug 'Valloric/YouCompleteMe'
-Plug 'fatih/vim-go'
+" Load plugins
+" VIM enhancements
+Plug 'ciaranm/securemodelines'
+Plug 'christoomey/vim-tmux-navigator'
 
-Plug 'elixir-editors/vim-elixir'
 
-Plug 'Chiel92/vim-autoformat'
-
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-" Plug 'junegunn/fzf.vim'
-
+" GUI enhancements
+Plug 'itchyny/lightline.vim'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 Plug 'w0rp/ale'
-
-Plug 'SirVer/ultisnips'
-let g:UltiSnipsSnippetDirectories = ['UltiSnips', $HOME.'/.vim/UltiSnips']
-
+Plug 'machakann/vim-highlightedyank'
+" Plug 'andymass/vim-matchup'
 Plug 'Yggdroot/indentLine'
-Plug 'jiangmiao/auto-pairs'
-Plug 'ervandew/supertab'
-Plug 'xolox/vim-misc'
-Plug 'tpope/vim-surround'
-Plug 'yuttie/comfortable-motion.vim'
-
+Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdcommenter'
-Plug 'ryanoasis/vim-devicons'
-Plug 'fisadev/vim-isort'
 
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'jiangmiao/auto-pairs'
+Plug 'xolox/vim-misc'
+Plug 'tpope/vim-surround'
+Plug 'yuttie/comfortable-motion.vim'
+Plug 'ervandew/supertab'
 
-Plug 'christoomey/vim-tmux-navigator'
+Plug 'SirVer/ultisnips'
 
+" Fuzzy finder
+Plug 'airblade/vim-rooter'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+
+" Semantic language support
+"Plug 'phildawes/racer'
+"Plug 'racer-rust/vim-racer'
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+
+
+" Completion plugins
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-tmux'
+Plug 'ncm2/ncm2-path'
+
+Plug 'rdnetto/YCM-Generator'
+Plug 'Valloric/YouCompleteMe'
+
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+
+" Syntactic language support
+Plug 'cespare/vim-toml'
+Plug 'rust-lang/rust.vim'
+Plug 'fatih/vim-go'
+Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+
+Plug 'rhysd/vim-clang-format'
+Plug 'octol/vim-cpp-enhanced-highlight'
+
+
+" Colorschemes
 Plug 'chriskempson/base16-vim'
 Plug 'nanotech/jellybeans.vim'
-" Initialize plugin system
+Plug 'w0ng/vim-hybrid'
+Plug 'tomasr/molokai'
+
 call plug#end()
-"
+
+
 " Enable filetype plugins
 filetype plugin on
 filetype indent on
@@ -111,7 +146,10 @@ set magic
 set number
 
 " Show matching brackets when text indicator is over them
-set showmatch
+" set showmatch
+set noshowmatch
+se nosm
+let g:loaded_matchparen=1
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -136,7 +174,7 @@ set background=dark
 set termguicolors
 
 try
-    colorscheme base16-atelier-dune
+    colorscheme molokai
     hi Normal guibg=NONE ctermbg=NONE
     if !exists('$TMUX')
         let g:gruvbox_italic=1
@@ -226,7 +264,10 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
+map <leader>tp :tabprev<cr>
 map <leader>t<leader> :tabnext<cr>
+
+map <leader>bp :bp<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -367,6 +408,84 @@ nnoremap <C-a> <esc>ggVG<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins and misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:LanguageClient_autoStart = 1
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ }
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+" Enable indent guides on default
+let g:indent_guides_enable_on_vim_startup = 1
+
+set splitbelow
+set splitright
+
+set ttyfast
+
+" Paste with auto-indent
+nnoremap p ]p
+
+" Linter
+" only lint on save
+" let g:ale_lint_on_text_changed = 'never'
+" let g:ale_lint_on_insert_leave = 1
+" let g:ale_lint_on_save = 1
+" let g:ale_lint_on_enter = 0
+let g:ale_virtualtext_cursor = 1
+let g:ale_linters = {'rust': ['rls'], 'c': [''], 'cpp': ['']}
+let g:ale_rust_rls_toolchain = ''
+let g:ale_rust_rls_executable='/Users/chingachgook/.cargo/bin/rls'
+highlight link ALEWarningSign Todo
+highlight link ALEErrorSign WarningMsg
+highlight link ALEVirtualTextWarning Todo
+highlight link ALEVirtualTextInfo Todo
+highlight link ALEVirtualTextError WarningMsg
+let g:ale_sign_error = "✖"
+let g:ale_sign_warning = "⚠"
+let g:ale_sign_info = "i"
+let g:ale_sign_hint = "➤"
+let g:ale_rust_cargo_use_check = 1
+
+nnoremap <silent> gh :ALEHover<CR>
+nnoremap <silent> gd :ALEGoToDefinition<CR>
+
+" racer + rust
+" https://github.com/rust-lang/rust.vim/issues/192
+let g:rustfmt_command = "rustfmt"
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
+" let g:racer_cmd = "/usr/local/bin/racer"
+"let g:racer_experimental_completer = 1
+let $RUST_SRC_PATH = "/Users/chingachgook/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
+
+" Completion
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+" tab to select
+" and don't hijack my enter key
+inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
+inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
+
+" Golang
+" let g:go_play_open_browser = 0
+" let g:go_fmt_fail_silently = 1
+" let g:go_fmt_command = "goimports"
+" let g:go_bin_path = expand("~/dev/go/bin")
+
+let g:UltiSnipsSnippetDirectories = ['UltiSnips', $HOME.'/.vim/UltiSnips']
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
+" Airline settings
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+
+let g:ycm_filetype_whitelist = {'cpp': 1, 'c': 1}
 let g:ycm_show_diagnostics_ui = 1
 
 " make YCM compatible with UltiSnips (using supertab)
@@ -375,70 +494,11 @@ let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
 " let g:SuperTabCrMapping = 1
 
-" let g:ycm_python_binary_path = 'python3'
+let g:ycm_python_binary_path = 'python3'
 let g:ycm_seed_identifiers_with_syntax = 1
 
 " close autocomplete window when done
 let g:ycm_autoclose_preview_window_after_completion=1
 
-nnoremap <silent> gd :YcmCompleter GoTo<CR>
+" nnoremap <silent> gd :YcmCompleter GoTo<CR>
 
-
-
-" better key bindings for UltiSnipsExpandTrigger
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-" Enable indent guides on default
-let g:indent_guides_enable_on_vim_startup = 1
-
-set splitbelow
-set splitright
-
-" Go to middle of line
-map mi :call cursor(0, len(getline('.'))/2)<CR>
-
-set ttyfast
-
-let python_highlight_all=1
-
-" Paste with auto-indent
-nnoremap p ]p
-
-nnoremap <leader>dd "_dd
-
-" Airline settings
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-
-tnoremap <C-h> <C-\><C-n><C-w>hi<Esc>
-tnoremap <C-j> <C-\><C-n><C-w>ji<Esc>
-tnoremap <C-k> <C-\><C-n><C-w>ki<Esc>
-tnoremap <C-l> <C-\><C-n><C-w>li<Esc>
-
-au BufEnter * if &buftype == 'terminal' | :startinsert | endif
-
-autocmd FocusGained * silent! checktime
-" autocmd BufEnter *.py ALEDisable
-
-set timeoutlen=400 ttimeoutlen=0
-
-au BufWrite *.py :Autoformat
-
-nnoremap fzf :FZF<CR>
-
-let g:fzf_colors =
-            \ { 'fg':      ['fg', 'Normal'],
-            \ 'bg':      ['bg', 'Normal'],
-            \ 'hl':      ['fg', 'Comment'],
-            \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-            \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-            \ 'hl+':     ['fg', 'Statement'],
-            \ 'info':    ['fg', 'PreProc'],
-            \ 'border':  ['fg', 'Ignore'],
-            \ 'prompt':  ['fg', 'Conditional'],
-            \ 'pointer': ['fg', 'Exception'],
-            \ 'marker':  ['fg', 'Keyword'],
-            \ 'spinner': ['fg', 'Label'],
-            \ 'header':  ['fg', 'Comment'] }
