@@ -44,9 +44,6 @@ Plug 'junegunn/fzf.vim'
 " Use release branch (Recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Or build from source code by use yarn: https://yarnpkg.com
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-
 " Syntactic language support
 Plug 'cespare/vim-toml'
 Plug 'godlygeek/tabular'
@@ -157,7 +154,7 @@ set background=dark
 set termguicolors
 
 try
-    colorscheme base16-gruvbox-dark-medium
+    " colorscheme base16-darktooth
     hi Normal guibg=NONE ctermbg=NONE
     if !exists('$TMUX')
         let g:gruvbox_italic=1
@@ -167,7 +164,7 @@ endtry
 
 " Set extra options when running in GUI mode
 if has("gui_running")
-    colorscheme base16-gruvbox-dark-medium
+    colorscheme base16-atelier-dune
     set guioptions-=T
     set guioptions-=e
     set t_Co=256
@@ -366,7 +363,7 @@ nnoremap <leader>v :tabe ~/.config/nvim/init.vim<CR>:tabm 0<CR>
 nnoremap <leader>s :! w<CR>:so $MYVIMRC<CR>
 
 " C++17 Build & Run
-autocmd FileType cpp nnoremap <C-b> :silent !g++ -std=c++17 -Ofast -DCOMP_PROG % -o %:r && ./%:r<CR>
+autocmd FileType cpp nnoremap <C-b> :silent !g++ -std=c++2a -Ofast -DCOMP_PROG % -o %:r && ./%:r<CR>
 "
 " Golang Build & Run
 autocmd FileType go nnoremap <C-b> :GoRun<CR>
